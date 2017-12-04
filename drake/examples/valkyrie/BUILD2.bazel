@@ -85,19 +85,39 @@ drake_cc_library(
     deps = [
         "//drake/manipulation/util:robot_state_msg_translator",
         "//drake/multibody/rigid_body_plant",
-        "//drake/systems/controllers:side",
+        "//drake/systems/robotInterfaces:side",
         "//drake/util",
         "//drake/util:lcm_util",
     ],
 )
 
+
+drake_cc_library(
+  name = "box_valkyrie_estimation",
+  hdrs = ["box_val_state_estimator.h"],
+  deps = [
+      ":robot_state_decoder",
+      ":valkyrie_constants",
+      "//drake/common",
+      "//drake/common:find_resource",
+      "//drake/lcm",
+      "//drake/multibody:kinematics_cache",
+      "//drake/multibody:rigid_body_tree",
+      "//drake/multibody/joints",
+      "//drake/multibody/parsers",
+      "//drake/systems/framework:diagram",
+      "//drake/systems/framework:leaf_system",
+      "//drake/systems/lcm",
+      "//drake/systems/lcm:lcm_driven_loop",
+      "//drake/util",
+      "@lcmtypes_bot2_core",
+      "@lcmtypes_robotlocomotion",
+  ],
+)
+
 drake_cc_library(
   name = "box_deps",
   hdrs = ["box.h"],
-  data = [
-      "test/valkyrie.alias_groups",
-      "test/valkyrie.id_controller_config",
-  ],
   deps = [
       ":robot_state_decoder",
       ":valkyrie_constants",
@@ -116,8 +136,7 @@ drake_cc_library(
       "@lcmtypes_bot2_core",
       "@lcmtypes_robotlocomotion",
       "//drake/systems/controllers/qp_inverse_dynamics:robot_kinematic_state",
-      "//drake/systems/controllers/plan_eval:generic_plan",
-      "//drake/systems/controllers/qp_inverse_dynamics:param_parser",
+      "//drake/systems/controllers/plan_eval:plan_eval_base_system",
   ],
 )
 
@@ -159,6 +178,15 @@ drake_cc_binary(
     srcs = ["box.cc"],
     data = [":models"],
     deps = [":box_deps"],
+)
+
+drake_cc_binary(
+    name = "box_val_state_estimator",
+    srcs = ["box_val_state_estimator.cc"],
+    data = [":models"],
+    deps = [
+        ":box_valkyrie_estimation",
+      ],
 )
 
 # === test/ ===
