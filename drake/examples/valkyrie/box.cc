@@ -129,10 +129,10 @@ void Box::compute_body_info() {
     if (body_name == "pelvis") {
       // std::cout << body_name << std::endl;
       // change in position
-      desired_pos += Vector3<double>(0,0,0);
+      desired_pos = Vector3<double>(0,0,3.0);
       // desired_pos[0] += Vector3<double>(0,0,0);
       // change in velocity
-      desired_vel += Vector3<double>(0,0,0);
+      desired_vel = Vector3<double>(0,0,.1);
       // desired_vel[0] += Vector3<double>(0,0,0);
     }
 
@@ -152,7 +152,7 @@ void Box::compute_body_info() {
     current_acc[5] = acc[2];
 
     if (body_name == "pelvis") {
-        std::cout << current_acc[0] << std::endl;
+        std::cout << current_acc[3] << std::endl;
         // input.mutable_desired_body_motions().at(body_name).mutable_values() =
         //   current_acc;
     }
@@ -187,11 +187,15 @@ void Box::compute_body_info() {
   atlas_command.velocity.resize(atlas_command.num_joints);
   atlas_command.effort.resize(atlas_command.num_joints);
 
+  // converts the DoF torques into the robot.actuator order as expected
+  systems::BasicVector<double> act_torques(atlas_command.num_joints);
+  act_torques.get_mutable_value() = robot.B.transpose() * output.dof_torques();
+
   for (int i = 0; i < atlas_command.num_joints; i++) {
     atlas_command.joint_names[i] = robot.actuators[i].name_;
     atlas_command.position[i] = 0;
     atlas_command.velocity[i] = 0;
-    atlas_command.effort[i] = output.dof_torques()[i];
+    atlas_command.effort[i] = act_torques[i];
   }
 
   eigenVectorToStdVector(k_q_p_, atlas_command.k_q_p);

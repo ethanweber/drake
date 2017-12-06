@@ -118,6 +118,7 @@ drake_cc_library(
       "//drake/systems/controllers/qp_inverse_dynamics:robot_kinematic_state",
       "//drake/systems/controllers/plan_eval:generic_plan",
       "//drake/systems/controllers/qp_inverse_dynamics:param_parser",
+      "//drake/systems/controllers/qp_inverse_dynamics:qp_output_translator_system",
   ],
 )
 

@@ -39,6 +39,9 @@
 #include "robotlocomotion/robot_plan_t.hpp"
 
 #include "drake/systems/controllers/setpoint.h"
+#include "drake/systems/controllers/qp_inverse_dynamics/qp_inverse_dynamics_common.h"
+#include "drake/systems/controllers/qp_inverse_dynamics/qp_output_translator_system.h"
+
 
 namespace drake {
 namespace examples {
@@ -61,8 +64,8 @@ class Box {
     VectorX<double> v_;
     // VectorX<double> position_;
     // VectorX<double> vel_;
-    double kp_ = 0.000001;
-    double kd_ = 0.000001;
+    double kp_ = 0.001;
+    double kd_ = 0.001;
 
     Eigen::Vector3d com_;
     Eigen::Isometry3d left_foot_;
