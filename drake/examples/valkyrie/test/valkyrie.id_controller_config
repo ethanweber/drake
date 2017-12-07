@@ -52,26 +52,26 @@ body_motion {
 
 body_motion {
     name: "right_palm"
-    kp: 1
-    kp: 1
-    kp: 1
-    kp: 1
-    kp: 1
-    kp: 1
+    kp: 5
+    kp: 5
+    kp: 5
+    kp: 5
+    kp: 5
+    kp: 5
 
-    kd: 1
-    kd: 1
-    kd: 1
-    kd: 1
-    kd: 1
-    kd: 1
+    kd: 5
+    kd: 5
+    kd: 5
+    kd: 5
+    kd: 5
+    kd: 5
 
-    weight: 1e-2
-    weight: 1e-2
-    weight: 1e-2
-    weight: 1e-2
-    weight: 1e-2
-    weight: 1e-2
+    weight: 1
+    weight: 1
+    weight: 1
+    weight: 1
+    weight: 1
+    weight: 1
 }
 
 body_motion {

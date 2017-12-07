@@ -88,32 +88,37 @@ void Box::compute_body_info() {
                                        alias_groups);
 
   const RigidBody<double>& pelvis = *alias_groups.get_body("pelvis");
+  const RigidBody<double>& torso = *alias_groups.get_body("torso");
   const RigidBody<double>& right_palm = *alias_groups.get_body("right_palm");
 
   Vector3<double> Kp_com, Kd_com;
   VectorX<double> Kp_q, Kd_q;
-  Vector6<double> Kp_centroidal, Kd_centroidal, Kp_pelvis, Kd_pelvis, Kp_right_palm, Kd_right_palm;
+  Vector6<double> Kp_centroidal, Kd_centroidal,
+                  Kp_pelvis, Kd_pelvis,
+                  Kp_right_palm, Kd_right_palm,
+                  Kp_torso, Kd_torso;
 
   paramset.LookupDesiredBodyMotionGains(pelvis, &Kp_pelvis, &Kd_pelvis);
+  paramset.LookupDesiredBodyMotionGains(torso, &Kp_torso, &Kd_torso);
   paramset.LookupDesiredBodyMotionGains(right_palm, &Kp_right_palm, &Kd_right_palm);
   paramset.LookupDesiredCentroidalMomentumDotGains(&Kp_centroidal,
                                                    &Kd_centroidal);
   Kp_com = Kp_centroidal.tail<3>();
   Kd_com = Kd_centroidal.tail<3>();
 
-  // Setpoints
-  Vector3<double> desired_com = Vector3<double>(0.0,0.0,.96);
 
-  // standard pevlis pose
-  // Eigen::Matrix4f m;
-  // m <<
-
+  // -----------------pelvis-----------------------
   Isometry3<double> desired_pelvis_pose;
   desired_pelvis_pose.matrix() <<
   0.999904,   0.0138047, -0.00143103, -0.00795848,
  -0.0137794,    0.99977,   0.0164094,  0.00130671,
  0.00165722,  -0.0163881,    0.999864,     1.01544,
           0,           0,           0,           1;
+
+   //  0.999904,   0.0138047, -0.00143103, -0.00795848,
+   // -0.0137794,    0.99977,   0.0164094,  0.00130671,
+   // 0.00165722,  -0.0163881,    0.999864,     1.01544,
+   //          0,           0,           0,           1;
 
   Vector6<double> desired_pelvis_vel;
   desired_pelvis_vel <<
@@ -125,41 +130,77 @@ void Box::compute_body_info() {
   // auto desired_pelvis_vel = ComputeBodyVelocity(state_, pelvis);
   // std::cout << desired_pelvis_vel.matrix() << std::endl;
 
- //  Isometry3<double> desired_right_palm_pose;
- //  desired_pelvis_pose.matrix() <<
- //  -0.0956289,  -0.479053,   0.872561,  0.0501593,
- //    0.9483,   0.222654,   0.226171,  -0.422336,
- // -0.302627,   0.849078,   0.432994,   0.774994,
- //         0,          0,          0,          1;
- //
- //  Vector6<double> desired_right_palm_vel;
- //  desired_pelvis_vel <<
- //  0.0,0.0,0.0,
- //  0.0,0.0,0.0;
-
-  auto desired_right_palm_pose = ComputeBodyPose(state_, right_palm);
-  std::cout << desired_right_palm_pose.matrix() << std::endl;
-  auto desired_right_palm_vel = ComputeBodyVelocity(state_, right_palm);
-  std::cout << desired_right_palm_vel.matrix() << std::endl;
-
   CartesianSetpoint<double> pelvis_PDff(
       desired_pelvis_pose, desired_pelvis_vel,
       Vector6<double>::Zero(), Kp_pelvis, Kd_pelvis);
-
-  CartesianSetpoint<double> right_palm_PDff(
-      desired_right_palm_pose, desired_right_palm_vel,
-      Vector6<double>::Zero(), Kp_right_palm, Kd_right_palm);
-
   input.mutable_desired_body_motions().at(pelvis.get_name()).mutable_values() =
       pelvis_PDff.ComputeTargetAcceleration(
         ComputeBodyPose(state_, pelvis),
         ComputeBodyVelocity(state_, pelvis));
+  // -----------------pelvis-----------------------
 
+  // // -----------------torso-----------------------
+  // Isometry3<double> desired_torso_pose;
+  // desired_torso_pose.matrix() <<
+  // 0.999904,   0.0138047, -0.00143103, -0.00795848,
+  // -0.0137794,    0.99977,   0.0164094,  0.00130671,
+  // 0.00165722,  -0.0163881,    0.999864,     1.01544,
+  //         0,           0,           0,           1;
+  //
+  // Vector6<double> desired_torso_vel;
+  // desired_torso_vel <<
+  // 0.0,0.0,0.0,
+  // 0.0,0.0,0.0;
+  //
+  // // auto desired_torso_pose = ComputeBodyPose(state_, torso);
+  // // std::cout << desired_torso_pose.matrix() << std::endl;
+  // // auto desired_torso_vel = ComputeBodyVelocity(state_, torso);
+  // // std::cout << desired_torso_vel.matrix() << std::endl;
+  //
+  // CartesianSetpoint<double> torso_PDff(
+  //     desired_torso_pose, desired_torso_vel,
+  //     Vector6<double>::Zero(), Kp_torso, Kd_torso);
+  // input.mutable_desired_body_motions().at(torso.get_name()).mutable_values() =
+  //     torso_PDff.ComputeTargetAcceleration(
+  //       ComputeBodyPose(state_, torso),
+  //       ComputeBodyVelocity(state_, torso));
+  // // -----------------torso-----------------------
+
+  // -----------------right_palm-----------------------
+  Isometry3<double> desired_right_palm_pose;
+  desired_right_palm_pose.matrix() <<
+  -0.0956289,  -0.479053,   0.872561,  -10.0501593,
+    0.9483,   0.222654,   0.226171,  -0.422336,
+ -0.302627,   0.849078,   0.432994,   0.774994,
+         0,          0,          0,          1;
+
+  //  -0.0956289,  -0.479053,   0.872561,  0.0501593,
+  //    0.9483,   0.222654,   0.226171,  -0.422336,
+  // -0.302627,   0.849078,   0.432994,   0.774994,
+  //         0,          0,          0,          1;
+
+  Vector6<double> desired_right_palm_vel;
+  desired_right_palm_vel <<
+  0.0,0.0,0.0,
+  0.0,0.0,0.0;
+
+  // auto desired_right_palm_pose = ComputeBodyPose(state_, right_palm);
+  // std::cout << desired_right_palm_pose.matrix() << std::endl;
+  // auto desired_right_palm_vel = ComputeBodyVelocity(state_, right_palm);
+  // std::cout << desired_right_palm_vel.matrix() << std::endl;
+
+  CartesianSetpoint<double> right_palm_PDff(
+      desired_right_palm_pose, desired_right_palm_vel,
+      Vector6<double>::Zero(), Kp_right_palm, Kd_right_palm);
   input.mutable_desired_body_motions().at(right_palm.get_name()).mutable_values() =
       right_palm_PDff.ComputeTargetAcceleration(
         ComputeBodyPose(state_, right_palm),
         ComputeBodyVelocity(state_, right_palm));
+  // -----------------right_palm-----------------------
 
+
+
+  Vector3<double> desired_com = Vector3<double>(0.0,0.0,0.96);
   input.mutable_desired_centroidal_momentum_dot().mutable_values().tail<3>() =
      (Kp_com.array() * (desired_com - com_).array() -
       Kd_com.array() * state_.get_com_velocity().array())
