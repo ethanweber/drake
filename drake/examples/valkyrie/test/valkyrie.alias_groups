@@ -87,3 +87,8 @@ body_group {
   name: "torso"
   member: "torso"
 }
+
+body_group {
+  name: "right_palm"
+  member: "rightPalm"
+}

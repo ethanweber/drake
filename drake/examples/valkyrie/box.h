@@ -55,8 +55,9 @@ class Box {
     ~Box();
     void handle_message(const lcm::ReceiveBuffer* rbuf, const std::string& channel, const bot_core::robot_state_t* msg);
     void publish_message();
-    void publish_command();
     void compute_body_info();
+    Isometry3<double> ComputeBodyPose(RobotKinematicState<double>& state, const RigidBody<double>& body);
+    Vector6<double> ComputeBodyVelocity(RobotKinematicState<double>& state, const RigidBody<double>& body);
 
   private:
     const manipulation::RobotStateLcmMessageTranslator translator_;
@@ -64,8 +65,8 @@ class Box {
     VectorX<double> v_;
     // VectorX<double> position_;
     // VectorX<double> vel_;
-    double kp_ = 0.001;
-    double kd_ = 0.001;
+    // double kp_ = 0.001;
+    // double kd_ = 0.001;
 
     Eigen::Vector3d com_;
     Eigen::Isometry3d left_foot_;

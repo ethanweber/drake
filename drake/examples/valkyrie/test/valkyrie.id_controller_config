@@ -51,6 +51,30 @@ body_motion {
 }
 
 body_motion {
+    name: "right_palm"
+    kp: 1
+    kp: 1
+    kp: 1
+    kp: 1
+    kp: 1
+    kp: 1
+
+    kd: 1
+    kd: 1
+    kd: 1
+    kd: 1
+    kd: 1
+    kd: 1
+
+    weight: 1e-2
+    weight: 1e-2
+    weight: 1e-2
+    weight: 1e-2
+    weight: 1e-2
+    weight: 1e-2
+}
+
+body_motion {
     name: "pelvis"
     kp: 20
     kp: 20
@@ -184,4 +208,3 @@ contact {
     }
     num_basis_per_contact_point: 4
 }
-
