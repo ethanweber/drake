@@ -63,10 +63,6 @@ class Box {
     const manipulation::RobotStateLcmMessageTranslator translator_;
     VectorX<double> q_;
     VectorX<double> v_;
-    // VectorX<double> position_;
-    // VectorX<double> vel_;
-    // double kp_ = 0.001;
-    // double kd_ = 0.001;
 
     Eigen::Vector3d com_;
     Eigen::Isometry3d left_foot_;

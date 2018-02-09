@@ -169,14 +169,14 @@ void Box::compute_body_info() {
   // -----------------right_palm-----------------------
   Isometry3<double> desired_right_palm_pose;
   desired_right_palm_pose.matrix() <<
-  -0.0956289,  -0.479053,   0.872561,  -10.0501593,
+  -0.0956289,  -0.479053,   0.872561,  0.0501593,
     0.9483,   0.222654,   0.226171,  -0.422336,
  -0.302627,   0.849078,   0.432994,   0.774994,
          0,          0,          0,          1;
 
   //  -0.0956289,  -0.479053,   0.872561,  0.0501593,
   //    0.9483,   0.222654,   0.226171,  -0.422336,
-  // -0.302627,   0.849078,   0.432994,   0.774994,
+  // -0.302627,   0.849078,   0.432994,   1.774994, // randomly changed the last value here from 0.774994
   //         0,          0,          0,          1;
 
   Vector6<double> desired_right_palm_vel;
@@ -197,7 +197,6 @@ void Box::compute_body_info() {
         ComputeBodyPose(state_, right_palm),
         ComputeBodyVelocity(state_, right_palm));
   // -----------------right_palm-----------------------
-
 
 
   Vector3<double> desired_com = Vector3<double>(0.0,0.0,0.96);
