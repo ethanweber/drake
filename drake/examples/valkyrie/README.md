@@ -39,3 +39,26 @@ To view or use the original MATLAB implementation of Valkyrie you may use this
 tag:
 
 https://github.com/RobotLocomotion/drake/tree/last_sha_with_original_matlab/drake/examples/Valkyrie
+
+
+# Documentation using Bazel - Ethan Weber
+Make sure the compile everything, with Gurobi support.
+```
+bazel build --config gurobi //...
+```
+Start the visualizer.
+```
+cd drake-distro
+./bazel-bin/tools/drake_visualizer
+```
+In another terminal window, load the robot model. Note that it should load and fall to the ground in simulation without a controller. This means it is working!
+```
+cd drake-distro
+./drake/examples/valkyrie/valkyrie_simulation
+```
+Now start the controller! I wrote a simplified controller that is flexible.
+```
+cd drake-distro/drake/examples/valkyrie
+bazel run --config gurobi box
+```
+If this starts running correctly, restart the valkyrie_simulation file. This will ensure the controller has valid input on startup.
