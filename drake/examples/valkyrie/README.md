@@ -42,7 +42,7 @@ https://github.com/RobotLocomotion/drake/tree/last_sha_with_original_matlab/drak
 
 
 # Documentation using Bazel - Ethan Weber
-Make sure the compile everything, with Gurobi support.
+Make sure to compile everything with Gurobi support.
 ```
 bazel build --config gurobi //...
 ```
@@ -61,4 +61,4 @@ Now start the controller! I wrote a simplified controller that is flexible.
 cd drake-distro/drake/examples/valkyrie
 bazel run --config gurobi box
 ```
-If this starts running correctly, restart the valkyrie_simulation file. This will ensure the controller has valid input on startup.
+If this starts running correctly, restart the valkyrie simulation with the above command while the controller is running. This will ensure the controller starts with a valid input when the robot model loads.
